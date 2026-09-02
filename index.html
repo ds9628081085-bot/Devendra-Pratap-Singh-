@@ -54,7 +54,8 @@ a{color:inherit;text-decoration:none;}
 button{font-family:inherit;cursor:pointer;background:transparent;border:none;}
 img{max-width:100%;display:block;}
 .container{max-width:1140px;margin:0 auto;padding:0 20px;}
-  /* ---------- Header ---------- */
+
+/* ---------- Header ---------- */
 header.site{background:var(--ink);color:#fff;position:sticky;top:0;z-index:60;
   border-bottom:2px solid var(--gold);}
 .topbar{display:flex;align-items:center;gap:20px;padding:14px 20px;max-width:1140px;margin:0 auto;}
@@ -143,7 +144,8 @@ header.site{background:var(--ink);color:#fff;position:sticky;top:0;z-index:60;
 .filters label{display:flex;gap:8px;align-items:center;font-size:.85rem;margin-bottom:7px;color:var(--charcoal);}
 .sortbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-size:.85rem;flex-wrap:wrap;gap:10px;}
 .sortbar select{padding:6px 10px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);color:var(--charcoal);}
-  /* ---------- PDP ---------- */
+
+/* ---------- PDP ---------- */
 .pdp{display:grid;grid-template-columns:1fr 1fr;gap:34px;}
 .pdp-gallery .main{height:340px;background:#F1EAD8;display:flex;align-items:center;justify-content:center;font-size:5rem;border:1px solid var(--line);}
 .pdp-thumbs{display:flex;gap:8px;margin-top:10px;}
@@ -258,7 +260,8 @@ th{color:var(--muted);font-weight:600;font-size:.78rem;}
 .modal{background:#fff;padding:26px;border-radius:6px;width:420px;max-width:92vw;max-height:90vh;overflow-y:auto;}
 .dark-mode .modal{background:#2a2622;color:var(--charcoal);}
 .modal h3{margin-bottom:12px;}
-  /* ---------- Compare Table ---------- */
+
+/* ---------- Compare Table ---------- */
 .compare-table{width:100%;border-collapse:collapse;font-size:.85rem;}
 .compare-table th,.compare-table td{border:1px solid var(--line);padding:10px;text-align:center;}
 .compare-table th{background:var(--ivory);font-weight:600;}
@@ -661,7 +664,7 @@ const FEATURES_DB = [
   { cat: "Payments & Fintech", sub: "International", name: "Multi-currency Payment Methods", status: "planned" },
   { cat: "Payments & Fintech", sub: "International", name: "Import Fees Deposit", status: "planned" },
   { cat: "Payments & Fintech", sub: "International", name: "Customs Duty Estimation", status: "planned" },
-  { cat: "Payments & Fintech", sub: "Seller", name: "Amazon Pay for Sellers", status "mock" },
+  { cat: "Payments & Fintech", sub: "Seller", name: "Amazon Pay for Sellers", status: "mock" },
   { cat: "Payments & Fintech", sub: "Seller", name: "Disbursement Schedules", status: "live" },
   { cat: "Payments & Fintech", sub: "Seller", name: "Multi-currency Disbursement", status: "planned" },
   { cat: "Payments & Fintech", sub: "Seller", name: "Seller Wallet Balance Withdrawal", status: "planned" },
@@ -839,7 +842,7 @@ const FEATURES_DB = [
   { cat: "Developer APIs", sub: "APIs", name: "AWS Amplify (Mobile/Web Apps)", status: "aws" },
 ];
 
-  /* ===================== STATE ===================== */
+/* ===================== STATE ===================== */
 let state = {
   cart:[], wishlist:[], orders:[], recentlyViewed:[],
   addresses:[{id:1,name:"Rohan Verma",line:"402, Shanti Apartments, MG Road",city:"Pune",pin:"411001",phone:"9876543210"}],
@@ -975,9 +978,9 @@ function openCompare(ids){
   html+='</table>';
   document.getElementById('compareContent').innerHTML=html;
   openModal('compareModal');
-   }
+}
 
-  /* ===================== CART ===================== */
+/* ===================== CART ===================== */
 function addToCart(id,qty=1,variant=null){
   const existing=state.cart.find(c=>c.id===id && c.variant===variant);
   if(existing){ existing.qty+=qty; } else { state.cart.push({id,qty,variant}); }
@@ -1103,7 +1106,7 @@ function doSearch(q){ state.searchQuery=q; go('#/search'); }
 function toggleNotif(e){ e.stopPropagation(); state.notifOpen=!state.notifOpen; render(); if(state.notifOpen){ setTimeout(()=>document.addEventListener('click',closeNotifOnce),0); } }
 function closeNotifOnce(){ state.notifOpen=false; render(); document.removeEventListener('click',closeNotifOnce); }
 
-  /* ===================== PRODUCT CARD ===================== */
+/* ===================== PRODUCT CARD ===================== */
 function ProductCard(p){
   const inWishlist=state.wishlist.includes(p.id);
   const off=Math.round((1-p.price/p.mrp)*100);
@@ -1268,8 +1271,8 @@ function CartPage(){
   if(state.cart.length===0) return `<div class="container"><div class="empty"><h3>Cart khaali hai</h3></div></div>`;
   const total=cartTotal(); const discount=couponDiscount(total); const delivery=total>499?0:49;
   return `<div class="container"><div class="listing"><div>${state.cart.map(c=>{const p=findProduct(c.id); return `<div class="cart-row"><div class="thumb">${p.emoji}</div><div>${p.title}<div class="qty"><button onclick="updateQty('${c.id}',${c.variant?`'${c.variant}'`:null},-1)">−</button><span>${c.qty}</span><button onclick="updateQty('${c.id}',${c.variant?`'${c.variant}'`:null},1)">+</button></div></div><div class="price">${money(p.price*c.qty)}</div></div>`}).join('')}</div><div class="cart-summary"><h3>Summary</h3><div class="summary-row"><span>Total</span><span>${money(total)}</span></div>${discount?`<div class="summary-row"><span>Coupon</span><span>-${money(discount)}</span></div>`:''}<div class="summary-row"><span>Delivery</span><span>${delivery===0?'FREE':money(delivery)}</span></div><div class="summary-row total"><span>Total</span><span>${money(total-discount+delivery)}</span></div><input id="couponInput" placeholder="Coupon code"><button class="btn btn-forest btn-sm btn-block" onclick="applyCoupon(document.getElementById('couponInput').value)">Apply</button><button class="btn btn-primary btn-block" onclick="go('#/checkout')">Checkout</button></div></div></div>`;
-      }
-  function CheckoutPage(){
+}
+function CheckoutPage(){
   if(state.cart.length===0) return `<div class="container"><div class="empty"><h3>Cart khaali</h3></div></div>`;
   const total=cartTotal(); const discount=couponDiscount(total); const delivery=total>499?0:49;
   return `<div class="container"><div class="checkout"><div><div class="stall"><h3>Address</h3>${state.addresses.map(a=>`<div class="addr-card ${state.selectedAddress===a.id?'selected':''}" onclick="selectAddress(${a.id})">${a.name}<br>${a.line}</div>`).join('')}</div><div class="stall"><h3>Payment</h3>${["UPI","Card","COD","Pay Later"].map(m=>`<div class="pay-option ${state.paymentMethod===m?'selected':''}" onclick="selectPayment('${m}')">${m}</div>`).join('')}</div></div><div class="cart-summary"><h3>Order Summary</h3><div class="summary-row"><span>Total</span><span>${money(total)}</span></div><div class="summary-row total"><span>Payable</span><span>${money(total-discount+delivery)}</span></div><button class="btn btn-primary btn-block" onclick="placeOrder()">Place Order</button></div></div></div>`;
